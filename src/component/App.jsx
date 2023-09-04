@@ -1,46 +1,25 @@
-import React, { useState } from "react";
-import Header from "./Header";
-import Footer from "./Footer";
-import Note from "./Note";
-import CreateArea from "./CreateArea";
-
-
-
-function App() {
-  const [notes, setNotes] = useState([]);
-
-  function addNote(newNote) {
-    setNotes(prevNotes => {
-      return [...prevNotes, newNote];
-    });
-  }
-
-  function deleteNote(id) {
-    setNotes(prevNotes => {
-      return prevNotes.filter((noteItem, index) => {
-        return index !== id;
-      });
-    });
-  }
-
-  return (
-    <div>
-      <Header />
-      <CreateArea onAdd={addNote} />
-      {notes.map((noteItem, index) => {
-        return (
-          <Note
-            key={index}
-            id={index}
-            title={noteItem.title}
-            content={noteItem.content}
-            onDelete={deleteNote}
-          />
-        );
-      })}
-      <Footer />
+import React from "react";
+import Main from "./Main";
+import { BrowserRouter as Router,Routes, Route } from 'react-router-dom';
+import Login from './Login';
+import Registration from './Registration';
+import Home from "./Home"
+function App(params) {
+    return(
+        <div>
+    
+        <div>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/registration" element={<Registration/>}/>
+          <Route path="/home" element={<Home/>}/>
+          <Route path="/" element={<Main/>}/>
+        </Routes>
+      </Router>
     </div>
-  );
+        </div>
+    )
 }
 
-export default App;
+export default App
