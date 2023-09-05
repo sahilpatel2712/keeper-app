@@ -4,6 +4,7 @@ const schema =new mongoose.Schema({
     email:{
         type:String,
         require:true,
+        index: true,
         unique:true,
     },
     password:{
