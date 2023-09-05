@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from './UserContext';
+
 
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { setUserEmail } = useUser();
   const history = useNavigate();
+
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
@@ -14,15 +18,32 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    
-    console.log('Logging in with email:', email, 'and password:', password);
-    history('/home')
+
+    let userData = {
+      email: email,
+      password: password
+    }
+    let res = await fetch("http://localhost:5000/api/v1/login", {
+      method: "POST",
+      body: JSON.stringify(userData),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8"
+      }
+    })
+    let data = await res.json()
+    if (data.hasOwnProperty("msg")) {
+      alert(data.msg)
+    } else {
+      setUserEmail(email);
+      history('/home')
+    }
   };
 
   return (
     <div className='body'>
+
       <div className="login-form">
         <form onSubmit={handleLogin}>
           <h1>Login</h1>
@@ -45,7 +66,7 @@ const Login = () => {
             </div>
 
           </div>
-          <div className="havent-reg" onClick={()=>{history("/registration")}}>Haven't Register?</div>
+          <div className="havent-reg" onClick={() => { history("/registration") }}>Haven't Register?</div>
           <div className="action">
             {/* <button>Register</button> */}
             <button>Log in</button>

@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from './UserContext';
+
 
 const Registration = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { setUserEmail } = useUser();
   const history = useNavigate();
 
 
@@ -16,31 +19,32 @@ const Registration = () => {
     setPassword(e.target.value);
   };
 
-  const handleRegister =async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     let userData = {
       email: email,
       password: password
     }
-    let res =await fetch("http://localhost:5000/api/v1/registration", {
+    let res = await fetch("http://localhost:5000/api/v1/registration", {
       method: "POST",
       body: JSON.stringify(userData),
       headers: {
         "Content-type": "application/json; charset=UTF-8"
       }
     })
-  let data=await res.json()
-  if (Array.isArray(data)) {
-    alert(data[0].msg);
-  } else {
-    if (data.hasOwnProperty("msg")) {
-        alert(data.msg)
+    let data = await res.json()
+    if (Array.isArray(data)) {
+      alert(data[0].msg);
     } else {
-     history("/home") 
+      if (data.hasOwnProperty("msg")) {
+        alert(data.msg)
+      } else {
+        setUserEmail(email);
+        history("/home")
+      }
     }
-  }
-  
- 
+
+
   };
 
   return (

@@ -39,13 +39,13 @@ const login = (req, res) => {
 
     Keeper.findOne({ email: email, password: password }).then((val) => {
         if (val === null) {
-            res.send("please Enter valid email or password")
+            res.send({"msg":"please Enter valid email or password"})
         } else {
             res.send(val)
         }
 
     }).catch((err) => {
-        console.log("sdf", err);
+        console.log(err);
     })
 }
 
