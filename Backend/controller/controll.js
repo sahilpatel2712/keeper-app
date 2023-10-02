@@ -1,5 +1,6 @@
 const { validationResult } = require("express-validator");
 const { Keeper } = require('../models/model');
+const bcrypt = require('bcrypt');
 
 const registration = (req, res) => {
     let errors = validationResult(req)
@@ -12,21 +13,22 @@ const registration = (req, res) => {
 
         Keeper.findOne({ email: email }).then((val) => {
             if (val === null) {
-                const newuser = new Keeper({
-                    email: email,
-                    password: password,
-                    data: []
-                })
-                newuser.save().then((val) => { res.send(val) })
-                    .catch((error) => { res.send(error) });
+                bcrypt.hash(req.body.password, 10, (err, hash) => {
+                    const newuser = new Keeper({
+                        email: email,
+                        password: hash,
+                        data: []
+                    })
+                    newuser.save().then((val) => { res.send(val) })
+                        .catch((error) => { res.send(error) });
 
-                
+                })
             } else {
-                res.send({"msg":"Email Address already used"})
+                res.send({ "msg": "Email Address already used" })
             }
 
         }).catch((err) => {
-                alert("you can not registration");
+            alert("you can not registration");
         })
 
 
@@ -37,11 +39,16 @@ const login = (req, res) => {
     const email = req.body.email
     const password = req.body.password
 
-    Keeper.findOne({ email: email, password: password }).then((val) => {
+    Keeper.findOne({ email: email }).then((val) => {
         if (val === null) {
-            res.send({"msg":"please Enter valid email or password"})
+            res.send({ "msg": "please Enter valid email or password" })
         } else {
-            res.send(val)
+            bcrypt.compare(password, val.password, (err, result) => {
+                if (result === true) {
+                    res.send(val)
+                }
+            })
+
         }
 
     }).catch((err) => {
@@ -68,7 +75,6 @@ const getData = (req, res) => {
     }).catch((err) => {
         res.send(err)
     })
-
 }
 
 module.exports = {

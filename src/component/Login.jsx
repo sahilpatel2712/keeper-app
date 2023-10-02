@@ -33,10 +33,13 @@ const Login = () => {
       }
     })
     let data = await res.json()
+    console.log(data.hasOwnProperty('msg'));
     if (data.hasOwnProperty("msg")) {
       alert(data.msg)
     } else {
-      setUserEmail(email);
+    localStorage.setItem('userEmail', email);
+
+     await setUserEmail(email);
       history('/home')
     }
   };

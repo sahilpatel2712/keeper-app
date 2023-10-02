@@ -4,12 +4,13 @@ import Footer from "./Footer";
 import Note from "./Note";
 import CreateArea from "./CreateArea";
 import { useUser } from './UserContext';
+import { useNavigate } from "react-router-dom";
 
 
 function Home() {
   const [notes, setNotes] = useState([]);
   const { userEmail } = useUser();
-
+  const history=useNavigate()
 
 
   async function fetchData(email) {
@@ -25,19 +26,22 @@ function Home() {
   }
 
   async function postData(email, notes) {
-    let res = await fetch("http://localhost:5000/api/v1/postData", {
+      await fetch("http://localhost:5000/api/v1/postData", {
       method: "POST",
       body: JSON.stringify({ email: email, data: notes }),
       headers: {
         "Content-type": "application/json; charset=UTF-8"
       }
     })
-    
-  
   }
 
   useEffect(() => {
-    fetchData(userEmail)
+    if (localStorage.getItem("userEmail")==="null"||localStorage.getItem("userEmail")===null) {
+      history('/')
+    } else {
+      fetchData(userEmail)
+      
+    }
   }, []);
 
 
@@ -73,6 +77,7 @@ function Home() {
             id={index}
             title={noteItem.title}
             content={noteItem.content}
+            date={noteItem.date}
             onDelete={deleteNote}
           />
         );

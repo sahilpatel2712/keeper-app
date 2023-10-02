@@ -33,6 +33,7 @@ const Registration = () => {
       }
     })
     let data = await res.json()
+    console.log(data);
     if (Array.isArray(data)) {
       alert(data[0].msg);
     } else {

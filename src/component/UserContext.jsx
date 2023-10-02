@@ -7,9 +7,11 @@ export const UserProvider = ({ children }) => {
     return localStorage.getItem('userEmail') || null;
   });
 
-  useEffect(() => {
-    localStorage.setItem('userEmail', userEmail);
-  }, [userEmail]);
+  // useEffect(() => {
+    
+  //    localStorage.setItem('userEmail', userEmail);
+
+  // }, [userEmail]);
 
   return (
     <UserContext.Provider value={{ userEmail, setUserEmail }}>

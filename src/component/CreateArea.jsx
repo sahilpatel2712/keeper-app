@@ -18,7 +18,12 @@ function CreateArea(props) {
   }
 
   function submitNote(event) {
-    props.onAdd(note);
+    let obj={
+      title:note.title,
+      content:note.content,
+      date:new Date().toISOString().split('T')[0]
+    }
+    props.onAdd(obj);
     setNote({
       title: "",
       content: ""

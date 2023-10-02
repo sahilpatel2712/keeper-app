@@ -9,7 +9,7 @@ router
     .post("/postData",postData)
     .post("/getData",getData)
     ;
- 
+
 
 // Export router
 module.exports = router;
